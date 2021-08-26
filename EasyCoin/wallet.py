@@ -29,4 +29,12 @@ def sign_ECDSA_msg(private_key):
 
 
 if __name__ == '__main__':
+    print("""       =========================================\n
+        EasyCoin v1.0.0 - BLOCKCHAIN SYSTEM\n
+       =========================================\n\n
+        You can find more help at: https://github.com/williamyip/EasyCoin.git\n
+        Make sure you are using the latest version or you may end in
+        a parallel chain.\n\n\n""")
+    wallet()
+    input("Press ENTER to exit...")
 
