@@ -111,6 +111,18 @@ def generate_ECDSA_keys():
     print(F"Your new address and private key are now in the file {filename}")
 
 def sign_ECDSA_msg(private_key):
+     """Sign the message to be sent
+    private_key: must be hex
+    return
+    signature: base64 (to make it shorter)
+    message: str
+    """
+    # Get timestamp, round it, make it into a string and encode it to bytes
+    message = str(round(time.time()))
+    bmessage = message.encode()
+    sk = ecdsa.SigningKey.from_string(bytes.fromhex(private_key), curve=ecdsa.SECP256k1)
+    signature = base64.b64encode(sk.sign(bmessage))
+    return signature, message
 
 
 if __name__ == '__main__':
