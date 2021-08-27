@@ -81,6 +81,14 @@ def send_transaction(addr_from, private_key, addr_to, amount):
         print("Wrong address or key length! Verify and try again.")
 
 def check_transactions():
+    """Retrieve the entire blockchain. With this you can check your
+    wallets balance. If the blockchain is to long, it may take some time to load.
+    """
+    try:
+        res = requests.get('http://localhost:5000/blocks')
+        print(res.text)
+    except requests.ConnectionError:
+        print('Connection error. Make sure that you have run miner.py in another terminal.')
 
 def generate_ECDSA_keys():
 
