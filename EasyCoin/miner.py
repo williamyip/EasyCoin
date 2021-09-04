@@ -130,3 +130,19 @@ def mine(a, blockchain, node_pending_transactions):
             }, sort_keys=True) + "\n")
             a.send(BLOCKCHAIN)
             requests.get(url = MINER_NODE_URL + '/blocks', params = {'update':MINER_ADDRESS})
+
+
+def find_new_chains():
+    # Get the blockchains of every other node
+    other_chains = []
+    for node_url in PEER_NODES:
+        # Get their chains using a GET request
+        block = requests.get(url = node_url + "/blocks").content
+        # Convert the JSON object to a Python dictionary
+        block = json.loads(block)
+        # Verify other node block is correct
+        validated = validate_blockchain(block)
+        if validated:
+            # Add it to our list
+            other_chains.append(block)
+    return other_chains
