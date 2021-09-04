@@ -9,3 +9,25 @@ Cryptocurrencies and smart-contracts aren't the most trivial concepts to underst
 
 ### What is a blockchain?
 Taking a look at the [Bitcoin Organization wiki website](https://en.bitcoin.it/wiki/Main_Page), a blockchain is a transaction database shared by all nodes participating in a system based on the Bitcoin protocol. A full copy of a currency's blockchain contains every transaction ever executed in the currency. With this information, one can find out how much value belonged to each address at any point in history. More details on [Bitcoin Paper](https://bitcoin.org/bitcoin.pdf)
+
+## Instructions
+First, install ```requirements.txt```.
+
+```
+pip install -r requirements.txt
+```
+
+Then you can either:
+
+- Run ```miner.py``` - to become a node and start mining
+- Run ```wallet.py``` - to become a user and send transactions (to send transactions you must run a node, in other words, you must run ```miner.py``` too)
+
+> Important: DO NOT run it in the python IDLE, run it in your console. The ```miner.py``` uses parallel processing that doesn't work in the python IDLE.
+
+## How does this code work?
+
+There are 2 main scripts:
+
+- ```miner.py```
+- ```wallet.py```
+
