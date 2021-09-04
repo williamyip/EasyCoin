@@ -146,3 +146,21 @@ def find_new_chains():
             # Add it to our list
             other_chains.append(block)
     return other_chains
+
+    def consensus(blockchain):
+    # Get the blocks from other nodes
+    other_chains = find_new_chains()
+    # If our chain isn't longest, then we store the longest chain
+    BLOCKCHAIN = blockchain
+    longest_chain = BLOCKCHAIN
+    for chain in other_chains:
+        if len(longest_chain) < len(chain):
+            longest_chain = chain
+    # If the longest chain wasn't ours, then we set our chain to the longest
+    if longest_chain == BLOCKCHAIN:
+        # Keep searching for proof
+        return False
+    else:
+        # Give up searching proof, update chain and start over again
+        BLOCKCHAIN = longest_chain
+        return BLOCKCHAIN
