@@ -96,3 +96,37 @@ def mine(a, blockchain, node_pending_transactions):
             BLOCKCHAIN = proof[1]
             a.send(BLOCKCHAIN)
             continue
+
+        else:
+            # Once we find a valid proof of work, we know we can mine a block so
+            # ...we reward the miner by adding a transaction
+            # First we load all pending transactions sent to the node server
+            NODE_PENDING_TRANSACTIONS = requests.get(url = MINER_NODE_URL + '/txion', params = {'update':MINER_ADDRESS}).content
+            NODE_PENDING_TRANSACTIONS = json.loads(NODE_PENDING_TRANSACTIONS)
+            # Then we add the mining reward
+            NODE_PENDING_TRANSACTIONS.append({
+                "from": "network",
+                "to": MINER_ADDRESS,
+                "amount": 1})
+            # Now we can gather the data needed to create the new block
+            new_block_data = {
+                "proof-of-work": proof[0],
+                "transactions": list(NODE_PENDING_TRANSACTIONS)
+            }
+            new_block_index = last_block.index + 1
+            new_block_timestamp = time.time()
+            last_block_hash = last_block.hash
+            # Empty transaction list
+            NODE_PENDING_TRANSACTIONS = []
+            # Now create the new block
+            mined_block = Block(new_block_index, new_block_timestamp, new_block_data, last_block_hash)
+            BLOCKCHAIN.append(mined_block)
+            # Let the client know this node mined a block
+            print(json.dumps({
+              "index": new_block_index,
+              "timestamp": str(new_block_timestamp),
+              "data": new_block_data,
+              "hash": last_block_hash
+            }, sort_keys=True) + "\n")
+            a.send(BLOCKCHAIN)
+            requests.get(url = MINER_NODE_URL + '/blocks', params = {'update':MINER_ADDRESS})
