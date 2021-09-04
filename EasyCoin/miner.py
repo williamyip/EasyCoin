@@ -164,3 +164,32 @@ def find_new_chains():
         # Give up searching proof, update chain and start over again
         BLOCKCHAIN = longest_chain
         return BLOCKCHAIN
+
+def validate_blockchain(block):
+    """Validate the submitted chain. If hashes are not correct, return false
+    block(str): json
+    """
+    return True
+
+
+@node.route('/blocks', methods=['GET'])
+def get_blocks():
+    # Load current blockchain. Only you should update your blockchain
+    if request.args.get("update") == MINER_ADDRESS:
+        global BLOCKCHAIN
+        BLOCKCHAIN = b.recv()
+    chain_to_send = BLOCKCHAIN
+    # Converts our blocks into dictionaries so we can send them as json objects later
+    chain_to_send_json = []
+    for block in chain_to_send:
+        block = {
+            "index": str(block.index),
+            "timestamp": str(block.timestamp),
+            "data": str(block.data),
+            "hash": block.hash
+        }
+        chain_to_send_json.append(block)
+
+    # Send our chain to whomever requested it
+    chain_to_send = json.dumps(chain_to_send_json, sort_keys=True)
+    return chain_to_send
