@@ -193,3 +193,33 @@ def get_blocks():
     # Send our chain to whomever requested it
     chain_to_send = json.dumps(chain_to_send_json, sort_keys=True)
     return chain_to_send
+
+@node.route('/txion', methods=['GET', 'POST'])
+def transaction():
+    """Each transaction sent to this node gets validated and submitted.
+    Then it waits to be added to the blockchain. Transactions only move
+    coins, they don't create it.
+    """
+    if request.method == 'POST':
+        # On each new POST request, we extract the transaction data
+        new_txion = request.get_json()
+        # Then we add the transaction to our list
+        if validate_signature(new_txion['from'], new_txion['signature'], new_txion['message']):
+            NODE_PENDING_TRANSACTIONS.append(new_txion)
+            # Because the transaction was successfully
+            # submitted, we log it to our console
+            print("New transaction")
+            print("FROM: {0}".format(new_txion['from']))
+            print("TO: {0}".format(new_txion['to']))
+            print("AMOUNT: {0}\n".format(new_txion['amount']))
+            # Then we let the client know it worked out
+            return "Transaction submission successful\n"
+        else:
+            return "Transaction submission failed. Wrong signature\n"
+    # Send pending transactions to the mining process
+    elif request.method == 'GET' and request.args.get("update") == MINER_ADDRESS:
+        pending = json.dumps(NODE_PENDING_TRANSACTIONS, sort_keys=True)
+        # Empty transaction list
+        NODE_PENDING_TRANSACTIONS[:] = []
+        return pending
+
