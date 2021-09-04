@@ -47,3 +47,31 @@ def create_genesis_block():
         "proof-of-work": 9,
         "transactions": None},
         "0")
+
+# Node's blockchain copy
+BLOCKCHAIN = [create_genesis_block()]
+
+""" Stores the transactions that this node has in a list.
+If the node you sent the transaction adds a block
+it will get accepted, but there is a chance it gets
+discarded and your transaction goes back as if it was never
+processed"""
+NODE_PENDING_TRANSACTIONS = []
+
+def proof_of_work(last_proof, blockchain):
+    # Creates a variable that we will use to find our next proof of work
+    incrementer = last_proof + 1
+    # Keep incrementing the incrementer until it's equal to a number divisible by 7919
+    # and the proof of work of the previous block in the chain
+    start_time = time.time()
+    while not (incrementer % 7919 == 0 and incrementer % last_proof == 0):
+        incrementer += 1
+        # Check if any node found the solution every 60 seconds
+        if int((time.time()-start_time) % 60) == 0:
+            # If any other node got the proof, stop searching
+            new_blockchain = consensus(blockchain)
+            if new_blockchain:
+                # (False: another node got proof first, new blockchain)
+                return False, new_blockchain
+    # Once that number is found, we can return it as a proof of our work
+    return incrementer, blockchain
