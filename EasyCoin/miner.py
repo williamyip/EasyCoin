@@ -75,3 +75,24 @@ def proof_of_work(last_proof, blockchain):
                 return False, new_blockchain
     # Once that number is found, we can return it as a proof of our work
     return incrementer, blockchain
+
+def mine(a, blockchain, node_pending_transactions):
+    BLOCKCHAIN = blockchain
+    NODE_PENDING_TRANSACTIONS = node_pending_transactions
+    while True:
+        """Mining is the only way that new coins can be created.
+        In order to prevent too many coins to be created, the process
+        is slowed down by a proof of work algorithm.
+        """
+        # Get the last proof of work
+        last_block = BLOCKCHAIN[-1]
+        last_proof = last_block.data['proof-of-work']
+        # Find the proof of work for the current block being mined
+        # Note: The program will hang here until a new proof of work is found
+        proof = proof_of_work(last_proof, BLOCKCHAIN)
+        # If we didn't guess the proof, start mining again
+        if not proof[0]:
+            # Update blockchain and save it to file
+            BLOCKCHAIN = proof[1]
+            a.send(BLOCKCHAIN)
+            continue
