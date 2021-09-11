@@ -50,4 +50,4 @@ When creating a wallet address, a new file will be generated with all your secur
 
 ## Disclaimer
 
-By no means should this project be used for real purposes, it lacks security and may contain several bugs.
+By no means should this project be used for real purposes, it lacks security and may contain several bugs!
